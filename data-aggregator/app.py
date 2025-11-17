@@ -7,7 +7,7 @@ app = Flask(__name__)
 GRAFANA_OPERATOR_ENDPOINT = "http://grafana:3000/apis/dashboard.grafana.app/v1beta1/namespaces/default/dashboards/b769e395-d791-4d3c-8d79-2d6e7bbd4c85"
 
 # Your API token
-API_TOKEN = "glsa_Ty78fRqIZGLMtxuTH3EHgma5a1NeCZ73_c5b78868"
+API_TOKEN = "API_TOKEN"
 
 # Headers with the token
 headers = {
@@ -35,7 +35,7 @@ def update_dashboard():
 
     try:
         # Modify the Flux query in targets[0]
-        new_query = f'''from(bucket: "my_db")
+        new_query = f'''from(bucket: "YOUR_BUCKET")
   |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
   |> filter(fn: (r) => r["_measurement"] == "environment_data")
   |> filter(fn: (r) => r["_field"] == "{field}")
@@ -57,3 +57,4 @@ def update_dashboard():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
+
