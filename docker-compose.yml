@@ -8,10 +8,10 @@ services:
       - "8086:8086"
     environment:
       - DOCKER_INFLUXDB_INIT_MODE=setup
-      - DOCKER_INFLUXDB_INIT_USERNAME=admin
-      - DOCKER_INFLUXDB_INIT_PASSWORD=password
-      - DOCKER_INFLUXDB_INIT_ORG=TUKE
-      - DOCKER_INFLUXDB_INIT_BUCKET=my_db
+      - DOCKER_INFLUXDB_INIT_USERNAME="USERNAME"
+      - DOCKER_INFLUXDB_INIT_PASSWORD="PASSWORD"
+      - DOCKER_INFLUXDB_INIT_ORG="YOUR_ORG"
+      - DOCKER_INFLUXDB_INIT_BUCKET="YOUR_BUCKET"
     networks:
       - monitoring
 
@@ -21,13 +21,13 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - GF_SECURITY_ADMIN_USER=admin
-      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_SECURITY_ADMIN_USER="GRAFANA_USERNAME"
+      - GF_SECURITY_ADMIN_PASSWORD="GRAFANA_PASSWORD"
       - GF_SECURITY_ALLOW_EMBEDDING=true       
       - GF_SMTP_ENABLED=true
-      - GF_SMTP_USER=grafanaalert6@gmail.com
-      - GF_SMTP_PASSWORD=xhxx vebe foyj hehk
-      - GF_SMTP_FROM_ADDRESS=grafanaalert6@gmail.com
+      - GF_SMTP_USER="YOUR_EMAIL"
+      - GF_SMTP_PASSWORD="PASSWORD"
+      - GF_SMTP_FROM_ADDRESS="YOUR_EMAIL"
       - GF_SMTP_HOST=smtp.gmail.com:587
       - GF_SMTP_SKIP_VERIFY=false
     depends_on:
@@ -86,3 +86,4 @@ services:
 networks:
   monitoring:
     driver: bridge
+
