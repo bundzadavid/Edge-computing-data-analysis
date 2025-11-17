@@ -8,7 +8,7 @@ import time
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # URL for the GET request
-url = "http://147.232.60.230:5001/updateHouseUI"
+url = "URL"
 
 # Initialize ZeroMQ context and PUB socket
 context = zmq.Context()
@@ -57,3 +57,4 @@ while True:
     except Exception as e:
         logging.error(f"Error occurred: {e}")
         time.sleep(5)
+
