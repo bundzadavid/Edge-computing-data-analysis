@@ -10,10 +10,10 @@ from influxdb_client.client.write_api import SYNCHRONOUS
 logging.basicConfig(level=logging.DEBUG)
 
 # InfluxDB configuration
-token = "Ig5hcOVgMy0CsEIISWCUvjmjtachhE6jM0m-HL1ffeSKLWWN_mmrKLANa2kN823EKmwoBLFPZlKb_p7Ta_fmaQ=="
-org = "TUKE"
-url = "http://influxdb:8086"
-bucket = "my_db"
+token = "YOUR_TOKEN"
+org = "ORGANIZATION"
+url = "INFLUX_URL"
+bucket = "BUCKET"
 
 # Initialize InfluxDB client and write API
 client = influxdb_client.InfluxDBClient(url=url, token=token, org=org)
@@ -52,3 +52,4 @@ while True:
 
     except Exception as e:
         logging.error(f"Error processing message: {e}")
+
