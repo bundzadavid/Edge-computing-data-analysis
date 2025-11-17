@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Display Chart</title>
+    <style>
+        /* Style for the iframe displaying the Grafana panel */
+        #graf {
+            width: 50%;
+            height: 400px;
+            border: none;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h2>Select parameter, aggregation function, time window and time range</h2>
+
+    <!-- Dropdown for selecting data field -->
+    <label for="parameter">Parameter:</label>
+    <select id="parameter">
+        <option value="temperature1">Temperature 1</option>
+        <option value="temperature2">Temperature 2</option>
+        <option value="temperature3">Temperature 3</option>
+        <option value="temperature4">Temperature 4</option>
+        <option value="lux1">Lux 1</option>
+        <option value="lux2">Lux 2</option>
+        <option value="lux3">Lux 3</option>
+        <option value="lux4">Lux 4</option>
+    </select>
+
+    <!-- Dropdown for selecting aggregation function -->
+    <label for="aggr">Aggregation function:</label>
+    <select id="aggr">
+        <option value="mean">Mean</option>
+        <option value="min">Minimum</option>
+        <option value="max">Maximum</option>
+        <option value="median">Median</option>
+    </select>
+
+    <!-- Dropdown for selecting aggregation time window -->
+    <label for="window">Aggregation time window:</label>
+    <select id="window">
+        <option value="5s">5 seconds</option>
+        <option value="30s">30 seconds</option>
+        <option value="1m">1 minute</option>
+        <option value="5m">5 minutes</option>
+        <option value="10m">10 minutes</option>
+    </select>
+
+    <!-- Dropdown for selecting start of time range -->
+    <label for="from">From:</label>
+    <select id="from">
+        <option value="now-5m">Last 5 minutes</option>
+        <option value="now-30m">Last 30 minutes</option>
+        <option value="now-1h">Last hour</option>
+        <option value="now-6h">Last 6 hours</option>
+        <option value="now-24h">Last 24 hours</option>
+    </select>
+
+    <!-- Dropdown for selecting end of time range -->
+    <label for="to">To:</label>
+    <select id="to">
+        <option value="now">Now</option>
+        <option value="now-30m">30 minutes ago</option>
+        <option value="now-1h">1 hour ago</option>
+    </select>
+
+    <!-- Button to trigger dashboard update and display -->
+    <button id="zobrazBtn">Display Chart</button>
+
+    <!-- iFrame for embedding Grafana panel -->
+    <iframe id="graf"></iframe>
+
+    <script>
+        // Event listener for the button click
+        document.getElementById('zobrazBtn').addEventListener('click', async function () {
+            const parameter = document.getElementById('parameter').value;
+            const aggr = document.getElementById('aggr').value;
+            const window = document.getElementById('window').value;
+            const from = document.getElementById('from').value;
+            const to = document.getElementById('to').value;
+            const iframe = document.getElementById('graf');
+
+            try {
+                // Send PUT request to backend to update Grafana dashboard query
+                const response = await fetch('/api/live/update-dashboard', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ field: parameter, aggr: aggr, window: window })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    // If update successful, set iframe source to Grafana panel URL
+                    const url = `http://localhost:3000/d-solo/b769e395-d791-4d3c-8d79-2d6e7bbd4c85/values?orgId=1&panelId=1&theme=light&from=${from}&to=${to}&timezone=browser`;
+                    iframe.src = url;
+                    iframe.style.display = 'block';
+                } else {
+                    // Show error if backend response indicates failure
+                    alert("Error: " + result.details);
+                }
+            } catch (error) {
+                // Handle any errors during the fetch process
+                alert("Error communicating with backend: " + error);
+            }
+        });
+    </script>
+</body>
+</html>
