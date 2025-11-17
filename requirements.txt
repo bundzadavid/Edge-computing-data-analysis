@@ -1,0 +1,5 @@
+influxdb-client
+pyzmq
+requests==2.31.0
+flask
+

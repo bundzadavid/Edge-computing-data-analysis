@@ -1,0 +1,15 @@
+# Use a lightweight Python base image
+FROM python:3.10-slim
+
+# Set working directory inside the container
+WORKDIR /app
+
+# Install dependencies – remove `flask-cors` if not needed
+RUN pip install flask requests flask-cors
+
+# Copy the application code and templates into the container
+COPY data-aggregator/app.py /app/
+COPY data-aggregator/templates/ /app/templates/
+
+# Run the Flask application when the container starts
+CMD ["python", "app.py"]

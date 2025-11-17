@@ -1,0 +1,14 @@
+# Use a lightweight Python 3.9 base image
+FROM python:3.9-slim
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy the proxy Python script into the container
+COPY proxy.py /app/proxy.py
+
+# Install required Python package
+RUN pip install pyzmq
+
+# Run the proxy script when the container starts
+CMD ["python", "/app/proxy.py"]

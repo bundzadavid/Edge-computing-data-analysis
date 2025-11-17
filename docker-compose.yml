@@ -1,0 +1,88 @@
+version: '3.8'
+
+services:
+  influxdb:
+    container_name: influxdb
+    image: influxdb:2.7.10
+    ports:
+      - "8086:8086"
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=admin
+      - DOCKER_INFLUXDB_INIT_PASSWORD=password
+      - DOCKER_INFLUXDB_INIT_ORG=TUKE
+      - DOCKER_INFLUXDB_INIT_BUCKET=my_db
+    networks:
+      - monitoring
+
+  grafana:
+    container_name: grafana
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_SECURITY_ALLOW_EMBEDDING=true       
+      - GF_SMTP_ENABLED=true
+      - GF_SMTP_USER=grafanaalert6@gmail.com
+      - GF_SMTP_PASSWORD=xhxx vebe foyj hehk
+      - GF_SMTP_FROM_ADDRESS=grafanaalert6@gmail.com
+      - GF_SMTP_HOST=smtp.gmail.com:587
+      - GF_SMTP_SKIP_VERIFY=false
+    depends_on:
+      - influxdb
+    networks:
+      - monitoring
+
+  proxy:
+    container_name: proxy
+    build:
+      context: .
+      dockerfile: Dockerfile.proxy
+    ports:
+      - "5559:5559"
+      - "5560:5560"
+    networks:
+      - monitoring
+
+  publisher:
+    container_name: publisher
+    build:
+      context: .
+      dockerfile: Dockerfile.pub
+    depends_on:
+      - proxy
+    networks:
+      - monitoring
+    volumes:
+      - .:/app
+
+  subscriber:
+    container_name: subscriber
+    build:
+      context: .
+      dockerfile: Dockerfile.sub
+    depends_on:
+      - influxdb
+      - proxy
+    networks:
+      - monitoring
+    volumes:
+      - .:/app
+
+  flaskapp:
+    container_name: flaskapp
+    build:
+      context: .
+      dockerfile: Dockerfile.flask
+    ports:
+      - "5000:5000"
+    depends_on:
+      - influxdb
+    networks:
+      - monitoring
+
+networks:
+  monitoring:
+    driver: bridge
